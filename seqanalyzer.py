@@ -44,6 +44,12 @@ def dna_rna_tools(*args: str):
     argument). 
     Returns the result of the procedure as string if one sequence
     is submitted or list if several.
+
+    Supported procedures:
+    - 'transcribe' - transcribes DNA sequence to RNA sequence.
+    - 'reverse' - reverses nucleotide sequence.
+    - 'complement' - returns complementary nucleotide sequence.
+    - 'reverse_complement' - returns reversed complementary nucleotide sequence.
     """
     *seqs, procedure = args
     results = []
@@ -73,6 +79,14 @@ def protein_tools(*args: str):
     Note: if procedure 'check_mutations' is used then input must
     contain only three arguments: RNA sequence, protein sequence
     and the name of procedure itself.
+
+    Supported procedures:
+    - 'compute_molecular_weight' — computes molecular weight in g/mol
+    - 'compute_length' — computes the number of amino acids
+    - 'compute_hydrophobicity' — computes the percentage of gydrophobic aminoacids 
+    - 'check_mutations' — checks missense mutations after translation
+    - 'get_protein_gene' - returns possible variants of coding DNA sequences
+    - 'count_amino_acids' - calculates the number of each aminoacid
     """
     *seqs, procedure = args
     results = []
