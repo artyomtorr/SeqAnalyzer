@@ -59,7 +59,7 @@ def dna_rna_tools(*args: str):
                  'complement': complement}
     for seq in seqs:
         if is_rna(seq) and is_dna(seq) is not True:
-            raise ValueError("Invalid alphabet")
+            raise ValueError("Invalid nucleotide sequence")
         results.append(functions[procedure](seq))
     if len(results) == 1:
         return results[0]
