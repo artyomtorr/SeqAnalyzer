@@ -1,4 +1,4 @@
-from dna_rna_tools import is_rna
+from modules.dna_rna_tools import is_rna
 
 PROTEINOGENIC_AMINOACIDS = {
     "A",    "C",    "D",    "E",
