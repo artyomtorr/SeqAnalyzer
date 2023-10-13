@@ -4,9 +4,10 @@ import modules.dna_rna_tools
 import modules.protein_tools 
 
 # Function for FASTQ-sequences filtration
-def fastq_filter(seqs: dict, gc_bounds = (0, 100), 
+def fastq_filter(input_path: str, gc_bounds = (0, 100), 
                  length_bounds = (0, 2**32), 
-                 quality_threshold = 0) -> dict:
+                 quality_threshold = 0,
+                 output_filename: str = None) -> dict:
     '''
     Filter FASTQ-sequences based on entered requirements.
     
@@ -25,14 +26,19 @@ def fastq_filter(seqs: dict, gc_bounds = (0, 100),
 
     Returns: a dict consisting FASTQ-sequences that meet all the requirements.
     '''
-    result = {}
+    seqs = read_fastq_file(input_path)
+    filtered_seqs = {}
     for id in seqs:
-        quality_value = check_quality(seqs[id][1], quality_threshold) 
+        quality_value = check_quality(seqs[id][2], quality_threshold) 
         length_value = check_length(seqs[id][0], length_bounds)
         gc_content_value = check_gc_content(seqs[id][0], gc_bounds)
         if  quality_value and length_value and gc_content_value == True:
-            result[id] = seqs[id]
-    return result
+            filtered_seqs[id] = seqs[id]
+            
+    if output_filename == None:
+        output_filename_with_extension = os.path.basename(input_path) 
+        output_filename = os.path.splitext(output_filename_with_extension)[0] 
+        write_fastq_file(filtered_seqs, output_filename)
 
 # Function for DNA/RNA sequences analysis
 def dna_rna_tools(*args: str):
