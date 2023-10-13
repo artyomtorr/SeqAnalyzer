@@ -1,4 +1,5 @@
 from typing import Tuple, Dict
+import os
 
 
 def check_gc_content(seq:str, gc_bounds = (0, 100)) -> bool:
@@ -22,16 +23,9 @@ def check_gc_content(seq:str, gc_bounds = (0, 100)) -> bool:
     if isinstance(gc_bounds, tuple):
             lower_bound = gc_bounds[0]
             upper_bound = gc_bounds[1]
-            if gc_content >= lower_bound and gc_content <= upper_bound:
-                return True
-            else:
-                return False
+            return gc_content >= lower_bound and gc_content <= upper_bound
     else:
-        if gc_content < gc_bounds:
-            return True
-        else:
-            return False
-
+        return gc_content < gc_bounds
 
 def check_length(seq:str, length_bounds = (0, 2**32))-> bool:
     '''
@@ -48,15 +42,9 @@ def check_length(seq:str, length_bounds = (0, 2**32))-> bool:
     if isinstance(length_bounds, tuple):
             lower_bound = length_bounds[0]
             upper_bound = length_bounds[1]
-            if len(seq) >= lower_bound and len(seq) <= upper_bound:
-                return True
-            else:
-                return False
+            return len(seq) >= lower_bound and len(seq) <= upper_bound
     else:
-        if len(seq) < length_bounds:
-            return True
-        else:
-            return False
+        return len(seq) < length_bounds
 
 
 def check_quality(seq:str, quality_threshold = 0)-> bool:
@@ -74,13 +62,10 @@ def check_quality(seq:str, quality_threshold = 0)-> bool:
         sum_quality += ord(symbol) - 33
     quality = sum_quality/len(seq)
     
-    if quality > quality_threshold:
-        return True
-    else:
-        return False
+    return quality > quality_threshold
 
 
-def read_fastq_file(input_path: str) -> Dict[str, Tuple[str, str]]:
+def read_fastq_file(input_path: str) -> Dict[str, Tuple[str, str, str]]:
     """
     Read FASTQ-file
 
@@ -89,24 +74,46 @@ def read_fastq_file(input_path: str) -> Dict[str, Tuple[str, str]]:
 
     Returns:
     - Dict[str, Tuple[str, str]]: dictionary with sequences, 
-    where keys - sequence identifiers (str), and values - 
+    where keys -     sequence identifiers (str), and values - 
     a tuples of two strings: sequence and quality.
     """
     with open(input_path, 'r') as fastq_file:
         names = []
         seqs = []
+        comments = []
         qualities = []
         for line in fastq_file:
             if line.startswith('@SRX'):
-                name = line.strip('\n').split()
-                names.append(name[0])
+                name = line.strip('\n')
+                names.append(name)
                 seq = fastq_file.readline().strip('\n')
                 seqs.append(seq)
-                next(fastq_file)
+                comment = fastq_file.readline().strip('\n')
+                comments.append(comment)
                 quality = fastq_file.readline().strip('\n')
                 qualities.append(quality)
         keys = names
-        values = list(zip(seqs, qualities))
+        values = list(zip(seqs, comments, qualities))
         fastq_dict = dict(zip(keys, values))
     return fastq_dict
-        
+
+
+def write_fastq_file(filtered_seqs: Dict[str, Tuple[str, str, str]], output_filename):
+    """
+    Write results of FASTQ-filtration to the file
+
+    Arguments:
+    - filtered_seqs (Dict[str, Tuple[str, str]]): а dictionary 
+    with filtered FASTQ-sequencies
+    - output_filename (str): name of the output file
+    """
+    if not os.path.isdir("fastq_filtrator_results"):
+        os.mkdir("fastq_filtrator_results")
+
+    with open(f'fastq_filtrator_resuls/{output_filename}.fastq', 'w') as output_file:
+        for name, values in filtered_seqs.items():
+            output_file.write(name + '\n')
+            output_file.write(values[0] + '\n')
+            output_file.write(values[1] + '\n')
+            output_file.write(values[2] + '\n')
+            
