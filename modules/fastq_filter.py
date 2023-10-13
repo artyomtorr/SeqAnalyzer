@@ -1,3 +1,6 @@
+from typing import Tuple, Dict
+
+
 def check_gc_content(seq:str, gc_bounds = (0, 100)) -> bool:
     '''
     Compute GC-content of the DNA seqence and check if it fits into bounds.
@@ -75,3 +78,35 @@ def check_quality(seq:str, quality_threshold = 0)-> bool:
         return True
     else:
         return False
+
+
+def read_fastq_file(input_path: str) -> Dict[str, Tuple[str, str]]:
+    """
+    Read FASTQ-file
+
+    Arguments:
+    - input_path (str): the path to the FASTQ-file 
+
+    Returns:
+    - Dict[str, Tuple[str, str]]: dictionary with sequences, 
+    where keys - sequence identifiers (str), and values - 
+    a tuples of two strings: sequence and quality.
+    """
+    with open(input_path, 'r') as fastq_file:
+        names = []
+        seqs = []
+        qualities = []
+        for line in fastq_file:
+            if line.startswith('@SRX'):
+                name = line.strip('\n').split()
+                names.append(name[0])
+                seq = fastq_file.readline().strip('\n')
+                seqs.append(seq)
+                next(fastq_file)
+                quality = fastq_file.readline().strip('\n')
+                qualities.append(quality)
+        keys = names
+        values = list(zip(seqs, qualities))
+        fastq_dict = dict(zip(keys, values))
+    return fastq_dict
+        
