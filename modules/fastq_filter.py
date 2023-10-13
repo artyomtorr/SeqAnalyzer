@@ -110,7 +110,7 @@ def write_fastq_file(filtered_seqs: Dict[str, Tuple[str, str, str]], output_file
     if not os.path.isdir("fastq_filtrator_results"):
         os.mkdir("fastq_filtrator_results")
 
-    with open(f'fastq_filtrator_resuls/{output_filename}.fastq', 'w') as output_file:
+    with open(f'fastq_filtrator_results/{output_filename}.fastq', 'w') as output_file:
         for name, values in filtered_seqs.items():
             output_file.write(name + '\n')
             output_file.write(values[0] + '\n')
