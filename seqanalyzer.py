@@ -4,27 +4,29 @@ import modules.dna_rna_tools
 import modules.protein_tools 
 
 # Function for FASTQ-sequences filtration
-def fastq_filter(input_path: str, gc_bounds = (0, 100), 
+def fastq_filter(input_path: str, 
+                 output_filename: str = None, 
+                 gc_bounds = (0, 100), 
                  length_bounds = (0, 2**32), 
-                 quality_threshold = 0,
-                 output_filename: str = None) -> dict:
+                 quality_threshold = 0) -> None:
     '''
     Filter FASTQ-sequences based on entered requirements.
     
     Arguments:
-        - seqs: a dict of FASTQ-sequences in the format:
-    'id' : ('sequence', 'quality'). Where key - sequence identifier 
-    (str), and value - a tuple of two strings: sequence and quality.
-        - gc_bounds (tuple or int, default = (0, 100)): GC-content interval 
-    (percentage) for filtering. Tuple if contains lower and upper 
-    bounds, int if only contains an upper bound.
-        - length_bounds (tuple or int, default = (0, 2**32)): length interval 
-    for filtering. Tuple if contains lower and upper bounds, 
-    int if only contains an upper bound.
+        - input_path (str): path to the file with FASTQ-sequences
+        - output_filename (str): name of the output file with 
+        filtered FASTQ-sequences
+        - gc_bounds (tuple or int, default = (0, 100)): GC-content
+        interval (percentage) for filtering. Tuple if contains 
+        lower and upper bounds, int if only contains an upper bound.
+        - length_bounds (tuple or int, default = (0, 2**32)): length 
+        interval for filtering. Tuple if contains lower and upper 
+        bounds, int if only contains an upper bound.
         - quality_threshold (int, default = 0): threshold value of average 
     read quality for filtering.
 
-    Returns: a dict consisting FASTQ-sequences that meet all the requirements.
+    Note: the output file is saved to the /fastq_filtrator_results 
+    directory. The default output file name is the name of the input file.
     '''
     seqs = read_fastq_file(input_path)
     filtered_seqs = {}
@@ -38,7 +40,7 @@ def fastq_filter(input_path: str, gc_bounds = (0, 100),
     if output_filename == None:
         output_filename_with_extension = os.path.basename(input_path) 
         output_filename = os.path.splitext(output_filename_with_extension)[0] 
-        write_fastq_file(filtered_seqs, output_filename)
+    write_fastq_file(filtered_seqs, output_filename)
 
 # Function for DNA/RNA sequences analysis
 def dna_rna_tools(*args: str):
@@ -102,8 +104,8 @@ def protein_tools(*args: str):
         "compute_hydrophobicity": compute_hydrophobicity,
         "stats_amino_acids": stats_amino_acids,
         "get_protein_gene": get_protein_gene
-
     }
+    
     if procedure == "check_mutations":
         results.append(check_mutations(seqs[0], seqs[1]))
     else:
