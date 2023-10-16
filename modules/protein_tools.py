@@ -1,55 +1,45 @@
 from modules.dna_rna_tools import is_rna
 
-PROTEINOGENIC_AMINOACIDS = {
-    "A",    "C",    "D",    "E",
-    "F",    "G",    "H",    "I",
-    "K",    "L",    "M",    "N",
-    "P",    "Q",    "R",    "S",
-    "T",    "V",    "W",    "Y",
-}
-
+PROTEINOGENIC_AMINOACIDS = {"A", "C", "D", "E", "F", "G", "H", "I","K", "L", 
+                            "M", "N","P", "Q", "R", "S", "T", "V", "W", "Y"}
 AMINO_ACID_MASSES = {
     "A": 71.03711,    "R": 156.10111,    "N": 114.04293,    "D": 115.02694,
     "C": 103.00919,    "Q": 128.05858,    "E": 129.04259,    "G": 57.02146,
     "H": 137.05891,    "I": 113.08406,    "L": 113.08406,    "K": 128.09496,
     "M": 131.04049,    "F": 147.06841,    "P": 97.05276,    "S": 87.03203,
-    "T": 101.04768,    "W": 186.07931,    "Y": 163.06333,    "V": 99.06841,
-}
+    "T": 101.04768,    "W": 186.07931,    "Y": 163.06333,    "V": 99.06841}
 
 GYDROPHOBIC_AMINOACIDS = {"A", "V", "L", "I", "P", "F", "W", "M"}
-
 DNA_CODONS = {
-    "A": ["GCT", "GCC", "GCA", "GCG"],    "C": ["TGT", "TGC"],
-    "D": ["GAT", "GAC"],    "E": ["GAA", "GAG"],    "F": ["TTT", "TTC"],
-    "G": ["GGT", "GGC", "GGA", "GGG"],    "H": ["CAT", "CAC"],
-    "I": ["ATT", "ATC", "ATA"],    "K": ["AAA", "AAG"],
+    "A": ["GCT", "GCC", "GCA", "GCG"], "C": ["TGT", "TGC"],
+    "D": ["GAT", "GAC"], "E": ["GAA", "GAG"], "F": ["TTT", "TTC"],
+    "G": ["GGT", "GGC", "GGA", "GGG"], "H": ["CAT", "CAC"],
+    "I": ["ATT", "ATC", "ATA"], "K": ["AAA", "AAG"],
     "L": ["TTA", "TTG", "CTT", "CTC", "CTA", "CTG"],
-    "M": ["ATG"],    "N": ["AAT", "AAC"],
-    "P": ["CCT", "CCC", "CCA", "CCG"],    "Q": ["CAA", "CAG"],
+    "M": ["ATG"], "N": ["AAT", "AAC"],
+    "P": ["CCT", "CCC", "CCA", "CCG"], "Q": ["CAA", "CAG"],
     "R": ["CGT", "CGC", "CGA", "CGG", "AGA", "AGG"],
     "S": ["TCT", "TCC", "TCA", "TCG", "AGT", "AGC"],
     "T": ["ACT", "ACC", "ACA", "ACG"],
-    "V": ["GTT", "GTC", "GTA", "GTG"],    "W": ["TGG"],
-    "Y": ["TAT", "TAC"],    "*": ["UAA", "UAG", "UGA"],
+    "V": ["GTT", "GTC", "GTA", "GTG"], "W": ["TGG"],
+    "Y": ["TAT", "TAC"], "*": ["UAA", "UAG", "UGA"]
 }
-
 RNA_CODONS = {
     "F": ["UUC", "UUU"],
     "L": ["UUA", "UUG", "CUU", "CUC", "CUA", "CUG"],
-    "I": ["AUU", "AUC", "AUA"],    "M": ["AUG"],
+    "I": ["AUU", "AUC", "AUA"], "M": ["AUG"],
     "V": ["GUU", "GUC", "GUA", "GUG"],
     "S": ["UCU", "UCC", "UCA", "UCG"],
     "P": ["CCU", "CCC", "CCA", "CCG"],
     "T": ["ACU", "ACC", "ACA", "ACG"],
     "A": ["GCU", "GCC", "GCA", "GCG"],
-    "Y": ["UAC", "UAU"],    "*": ["UAA", "UAG", "UGA"],
-    "H": ["CAU", "CAC"],    "Q": ["CAA", "CAG"],
-    "N": ["AAU", "AAC"],    "K": ["AAA", "AAG"],
-    "D": ["GAU", "GAC"],    "E": ["GAA", "GAG"],
-    "C": ["UGU", "UGC"],    "W": ["UGG"],
+    "Y": ["UAC", "UAU"], "*": ["UAA", "UAG", "UGA"],
+    "H": ["CAU", "CAC"], "Q": ["CAA", "CAG"],
+    "N": ["AAU", "AAC"], "K": ["AAA", "AAG"],
+    "D": ["GAU", "GAC"], "E": ["GAA", "GAG"],
+    "C": ["UGU", "UGC"], "W": ["UGG"],
     "R": ["CGU", "CGC", "CGA", "CGG", "AGA", "AGG"],
-    "S": ["AGU", "AGC"],
-    "G": ["GGU", "GGC", "GGA", "GGG"],
+    "S": ["AGU", "AGC"], "G": ["GGU", "GGC", "GGA", "GGG"]
 }
 
 
@@ -61,7 +51,7 @@ def is_protein(seq: str) -> bool:
     return unique_chars <= PROTEINOGENIC_AMINOACIDS
 
 
-def compute_molecular_weight(protein: str) -> tuple:
+def compute_molecular_weight(protein: str) -> dict:
     """
     Compute molecular weight (g/mol) of protein sequence.
 
@@ -78,7 +68,7 @@ def compute_molecular_weight(protein: str) -> tuple:
     return {protein: round(molecular_weight, 3)}
 
 
-def compute_length(protein: str) -> tuple:
+def compute_length(protein: str) -> dict:
     """
     Compute the length of the input protein sequence.
 
@@ -91,7 +81,7 @@ def compute_length(protein: str) -> tuple:
     return {protein: len(protein)}
 
 
-def get_protein_gene(protein: str) -> str:
+def get_protein_gene(protein: str) -> dict:
     """
     Returns possible variants of DNAs for a given protein sequence.
 
@@ -114,7 +104,7 @@ def get_protein_gene(protein: str) -> str:
     for aa in protein.upper():
         codons = DNA_CODONS[aa]
         nucleic_acid_seq.append("/".join(codons))
-    return " ".join(nucleic_acid_seq)
+    return {protein: " ".join(nucleic_acid_seq)}
 
 
 def stats_amino_acids(protein: str) -> dict:
@@ -140,10 +130,10 @@ def stats_amino_acids(protein: str) -> dict:
             amino_acids_dict[aa] += 1
         else:
             amino_acids_dict[aa] = 1
-    return amino_acids_dict
+    return {protein: amino_acids_dict}
 
 
-def compute_hydrophobicity(protein: str) -> tuple:
+def compute_hydrophobicity(protein: str) -> dict:
     """
     Compute the percentage of gydrophobic aminoacids in protein sequence.
 
@@ -189,9 +179,7 @@ def translate_rna(rna: str) -> str:
     if protein[0] != "M":
         raise ValueError("Start-codon (M) is absent in mRNA")
 
-    start = protein.index("M")
-    stop = protein.index("*")
-    return "".join(protein[start : stop + 1])
+    return "".join(protein)
 
 
 def check_mutations(rna: str, protein: str) -> str:
@@ -227,9 +215,9 @@ def check_mutations(rna: str, protein: str) -> str:
     if is_rna(rna) is not True:
         raise ValueError("Invalid RNA sequence")
     if protein[-1] != "*":
-        raise ValueError("Stop (*) is absent")
+        raise ValueError("Stop (*) is absent in protein")
     if protein[0] != "M":
-        raise ValueError("Start (M) is absent")
+        raise ValueError("Start (M) is absent in protein")
     if len(protein) != len(rna) / 3:
         raise ValueError("Different length of translated protein and protein")
 
@@ -240,4 +228,4 @@ def check_mutations(rna: str, protein: str) -> str:
     if len(mutations) == 0:
         return "Protein without mutations."
     else:
-        return "Mutations: " + ", ".join(mutations) + "."
+        return {protein: "Mutations: " + ", ".join(mutations) + "."}

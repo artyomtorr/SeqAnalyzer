@@ -2,7 +2,7 @@ from typing import Tuple, Dict
 import os
 
 
-def check_gc_content(seq:str, gc_bounds = (0, 100)) -> bool:
+def check_gc_content(seq:str, gc_bounds: Tuple[int, int] = (0, 100)) -> bool:
     '''
     Compute GC-content of the DNA seqence and check if it fits into bounds.
 
@@ -20,14 +20,12 @@ def check_gc_content(seq:str, gc_bounds = (0, 100)) -> bool:
             gc_count += 1
     gc_content = (gc_count /len(seq)) * 100
 
-    if isinstance(gc_bounds, tuple):
-            lower_bound = gc_bounds[0]
-            upper_bound = gc_bounds[1]
-            return gc_content >= lower_bound and gc_content <= upper_bound
-    else:
-        return gc_content < gc_bounds
+    if isinstance(gc_bounds, int) or  isinstance(gc_bounds, float):
+        gc_bounds = (0, gc_bounds)
+        
+    return gc_bounds[0] <= gc_content <= gc_bounds[1]
 
-def check_length(seq:str, length_bounds = (0, 2**32))-> bool:
+def check_length(seq:str, length_bounds: Tuple[int, int] = (0, 2**32))-> bool:
     '''
     Check if length of the input DNA seqence fits into bounds.
 
@@ -39,15 +37,12 @@ def check_length(seq:str, length_bounds = (0, 2**32))-> bool:
 
     Returns: boolean
     '''
-    if isinstance(length_bounds, tuple):
-            lower_bound = length_bounds[0]
-            upper_bound = length_bounds[1]
-            return len(seq) >= lower_bound and len(seq) <= upper_bound
-    else:
-        return len(seq) < length_bounds
+    if isinstance(length_bounds, int) or  isinstance(length_bounds, float):
+        length_bounds = (0, length_bounds)
+        
+    return length_bounds[0] <= len(seq) <= length_bounds[1]
 
-
-def check_quality(seq:str, quality_threshold = 0)-> bool:
+def check_quality(seq:str, quality_threshold:int = 0)-> bool:
     '''
     Check if average phred quality score of sequence exceeds the threshold.
 
@@ -60,9 +55,9 @@ def check_quality(seq:str, quality_threshold = 0)-> bool:
     sum_quality = 0
     for symbol in seq:
         sum_quality += ord(symbol) - 33
-    quality = sum_quality/len(seq)
+    mean_quality = sum_quality/len(seq)
     
-    return quality > quality_threshold
+    return mean_quality > quality_threshold
 
 
 def read_fastq_file(input_path: str) -> Dict[str, Tuple[str, str, str]]:
@@ -98,7 +93,7 @@ def read_fastq_file(input_path: str) -> Dict[str, Tuple[str, str, str]]:
     return fastq_dict
 
 
-def write_fastq_file(filtered_seqs: Dict[str, Tuple[str, str, str]], output_filename):
+def write_fastq_file(filtered_seqs: Dict[str, Tuple[str, str, str]], output_filename: str):
     """
     Write results of FASTQ-filtration to the file
 

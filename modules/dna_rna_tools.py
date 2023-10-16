@@ -1,10 +1,7 @@
-COMPLEMEMNT_DICT = {'A': 'T', 'T': 'A', 'G': 'C', 'C': 'G', 'U': 'A',  
+COMPLEMENT_DICT = {'A': 'T', 'T': 'A', 'G': 'C', 'C': 'G', 'U': 'A',  
                  'a': 't', 't': 'a', 'g': 'c', 'c': 'g', 'u': 'a'}
-
 TRANSCRIPTION_DICT = {'T': 'U', 't': 'u'}
-
 ALPHABET_DNA = {'A', 'T', 'G', 'C'}
-
 ALPHABET_RNA = {'A', 'G', 'C', 'U'}
 
 
@@ -15,24 +12,21 @@ def reverse(seq:str) -> str:
     return seq[::-1]
 
 
-def complement(seq:str) ->str:
+def complement(seq:str) -> str:
     '''
     Returns complementary nucleotide sequence.
     '''
     result = []
     for nucleotide in seq:
-        if nucleotide in COMPLEMEMNT_DICT:
-            result += COMPLEMEMNT_DICT[nucleotide]
-        else: 
-            result += nucleotide
+        result.append(COMPLEMEMNT_DICT[nucleotide])
     return "".join(result)
 
 
-def reverse_complement(seq:str) ->str:
+def reverse_complement(seq:str) -> str:
     '''
     Returns reversed complementary nucleotide sequence.
     '''
-    return complement(reverse(seq))
+    return reverse(complement(seq))
 
 
 def transcribe(seq:str)-> str:
@@ -41,10 +35,7 @@ def transcribe(seq:str)-> str:
     '''
     result = []
     for nucleotide in seq:
-        if nucleotide in TRANSCRIPTION_DICT:
-            result += TRANSCRIPTION_DICT[nucleotide]
-        else: 
-            result += nucleotide
+        result.append(TRANSCRIPTION_DICT[nucleotide])
     return "".join(result)
 
 

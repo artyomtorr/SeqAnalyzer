@@ -1,14 +1,13 @@
-# Importing modules
 import modules.fastq_filter as ff
 import modules.dna_rna_tools as drt
 import modules.protein_tools as pt
 
-# Function for FASTQ-sequences filtration
+
 def run_fastq_filter(input_path: str, 
                  output_filename: str = None, 
-                 gc_bounds = (0, 100), 
-                 length_bounds = (0, 2**32), 
-                 quality_threshold = 0) -> None:
+                 gc_bounds: Tuple[int, int] = (0, 100), 
+                 length_bounds: Tuple[int, int] = (0, 2**32), 
+                 quality_threshold: int = 0) -> None:
     '''
     Filter FASTQ-sequences based on entered requirements.
     
@@ -30,19 +29,19 @@ def run_fastq_filter(input_path: str,
     '''
     seqs = ff.read_fastq_file(input_path)
     filtered_seqs = {}
-    for id in seqs:
-        quality_value = ff.check_quality(seqs[id][2], quality_threshold) 
-        length_value = ff.check_length(seqs[id][0], length_bounds)
-        gc_content_value = ff.check_gc_content(seqs[id][0], gc_bounds)
-        if  quality_value and length_value and gc_content_value == True:
-            filtered_seqs[id] = seqs[id]
+    for name in seqs:
+        quality_value = ff.check_quality(seqs[name][2], quality_threshold) 
+        length_value = ff.check_length(seqs[name][0], length_bounds)
+        gc_content_value = ff.check_gc_content(seqs[name][0], gc_bounds)
+        if  quality_value and length_value and gc_content_value:
+            filtered_seqs[name] = seqs[name]
             
-    if output_filename == None:
+    if not output_filename:
         output_filename_with_extension = os.path.basename(input_path) 
         output_filename = os.path.splitext(output_filename_with_extension)[0] 
     ff.write_fastq_file(filtered_seqs, output_filename)
 
-# Function for DNA/RNA sequences analysis
+
 def run_dna_rna_tools(*args: str):
     """
     Function containing methods for DNA or RNA sequences analysis.
@@ -61,20 +60,20 @@ def run_dna_rna_tools(*args: str):
     """
     *seqs, procedure = args
     results = []
-    functions = {'transcribe': drt.transcribe, 
+    procedures = {'transcribe': drt.transcribe, 
                  'reverse': drt.reverse,
                  'reverse_complement': drt.reverse_complement,
                  'complement': drt.complement}
     for seq in seqs:
-        if is_rna(seq) and is_dna(seq) is not True:
+        if not is_rna(seq) and is_dna(seq):
             raise ValueError("Invalid nucleotide sequence")
-        results.append(functions[procedure](seq))
+        results.append(procedures[procedure](seq))
     if len(results) == 1:
         return results[0]
     else: 
         return results
 
-# Function for protein sequences analysis
+
 def run_protein_tools(*args: str):
     """
     Function containing methods for protein analysis.
@@ -98,7 +97,7 @@ def run_protein_tools(*args: str):
     """
     *seqs, procedure = args
     results = []
-    functions = {
+    procedures = {
         "compute_molecular_weight": pt.compute_molecular_weight,
         "compute_length": pt.compute_length,
         "compute_hydrophobicity": pt.compute_hydrophobicity,
@@ -115,7 +114,7 @@ def run_protein_tools(*args: str):
             if procedure not in functions:
                 raise ValueError("Wrong procedure name")
             else:
-                results.append(functions[procedure](seq))
+                results.append(procedures[procedure](seq))
     if len(results) == 1:
         return results[0]
     else:
