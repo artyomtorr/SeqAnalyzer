@@ -1,3 +1,5 @@
+import os
+from typing import Tuple
 import modules.fastq_filter as ff
 import modules.dna_rna_tools as drt
 import modules.protein_tools as pt
