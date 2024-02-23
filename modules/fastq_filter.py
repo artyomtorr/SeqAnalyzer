@@ -1,5 +1,5 @@
-from typing import Tuple, Dict
 import os
+from typing import Tuple, Dict
 
 
 def check_gc_content(seq:str, gc_bounds: Tuple[int, int] = (0, 100)) -> bool:
@@ -77,20 +77,19 @@ def read_fastq_file(input_path: str) -> Dict[str, Tuple[str, str, str]]:
         seqs = []
         comments = []
         qualities = []
+        fastqs = dict() 
         for line in fastq_file:
-            if line.startswith('@SRX'):
+            if line.startswith('@'):
                 name = line.strip('\n')
-                names.append(name)
                 seq = fastq_file.readline().strip('\n')
                 seqs.append(seq)
                 comment = fastq_file.readline().strip('\n')
                 comments.append(comment)
                 quality = fastq_file.readline().strip('\n')
                 qualities.append(quality)
-        keys = names
-        values = list(zip(seqs, comments, qualities))
-        fastq_dict = dict(zip(keys, values))
-    return fastq_dict
+                fastqs[name] =  (seqs, comments, qualities)
+
+    return fastqs
 
 
 def write_fastq_file(filtered_seqs: Dict[str, Tuple[str, str, str]], output_filename: str):

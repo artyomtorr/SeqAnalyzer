@@ -18,7 +18,7 @@ def complement(seq:str) -> str:
     '''
     result = []
     for nucleotide in seq:
-        result.append(COMPLEMEMNT_DICT[nucleotide])
+        result.append(COMPLEMENT_DICT[nucleotide])
     return "".join(result)
 
 

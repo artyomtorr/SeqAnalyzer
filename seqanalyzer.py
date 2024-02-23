@@ -67,7 +67,7 @@ def run_dna_rna_tools(*args: str):
                  'reverse_complement': drt.reverse_complement,
                  'complement': drt.complement}
     for seq in seqs:
-        if not is_rna(seq) and is_dna(seq):
+        if not drt.is_rna(seq) and drt.is_dna(seq):
             raise ValueError("Invalid nucleotide sequence")
         results.append(procedures[procedure](seq))
     if len(results) == 1:
@@ -108,12 +108,12 @@ def run_protein_tools(*args: str):
 
     }
     if procedure == "check_mutations":
-        results.append(check_mutations(seqs[0], seqs[1]))
+        results.append(pt.check_mutations(seqs[0], seqs[1]))
     else:
         for seq in seqs:
-            if is_protein(seq) is not True:
+            if pt.is_protein(seq) is not True:
                 raise ValueError("Invalid protein sequence")
-            if procedure not in functions:
+            if procedure not in procedures:
                 raise ValueError("Wrong procedure name")
             else:
                 results.append(procedures[procedure](seq))

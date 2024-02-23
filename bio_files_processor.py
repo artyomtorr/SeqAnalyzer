@@ -69,7 +69,7 @@ def get_genes_from_gbk(input_gbk: str) -> Dict[str, Tuple[str,str]]:
                 full_seq = ''.join(seqs).replace('/translation="', '')
                 seqs = []
                 genes_dict[gene_name] = gene_number, full_seq
-                gene_numner +=1
+                gene_number +=1
             index += 1
     return genes_dict
 
@@ -91,7 +91,7 @@ def select_genes_from_gbk_to_fasta(input_gbk: str, genes: list,
 
     genes_dict = get_genes_from_gbk(input_gbk)
     genes_from_gbk = list(genes_dict.keys()) 
-    max_number = len(genes_only)
+    max_number = len(genes_from_gbk)
     genes_of_interest = []
 
     for gene in genes:
