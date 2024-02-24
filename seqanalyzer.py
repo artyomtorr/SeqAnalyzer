@@ -99,7 +99,7 @@ class NucleicAcidSequence(BiologicalSequence):
     
     def gc_content(self):
         gc_count = self.seq.count('G') + self.seq.count('C')
-        return gc_count / len(self.seq)
+        return gc_count / len(self.seq) * 100
     
 
 class DNASequence(NucleicAcidSequence):
