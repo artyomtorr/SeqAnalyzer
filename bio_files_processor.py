@@ -1,5 +1,7 @@
 import os
-from typing import Dict, Tuple
+from dataclasses import dataclass
+from typing import Dict, List, Tuple
+
 
 def convert_multiline_fasta_to_oneline(input_fasta: str, output_fasta: str = None) -> None:
     """
@@ -88,7 +90,6 @@ def select_genes_from_gbk_to_fasta(input_gbk: str, genes: list,
     - output_fasta (str, optional): name of the output FASTA file 
     The default output file name is the name of the input file.
     """
-
     genes_dict = get_genes_from_gbk(input_gbk)
     genes_from_gbk = list(genes_dict.keys()) 
     max_number = len(genes_from_gbk)
@@ -118,3 +119,77 @@ def select_genes_from_gbk_to_fasta(input_gbk: str, genes: list,
         for gene in genes_of_interest:
             output_file.write(">" + gene + "\n")
             output_file.write(genes_dict.get(gene)[1] + "\n")
+
+
+@dataclass
+class FastaRecord:
+    """Dataclass representing a FASTA record."""
+    id: str
+    description: str
+    seq: str
+
+    def __repr__(self)-> str:
+        line_length = 75
+        seq_lines = [self.seq[i:i+line_length] for i in range(0, len(self.seq), line_length)]
+        output = f">{self.id} {self.description}\n"
+        output += '\n'.join(seq_lines)
+        return output
+    
+
+class OpenFasta:
+    """Context manager for reading FASTA files."""
+    def __init__(self, file_path: str, mode: str = 'r') -> None:
+        self.file_path = file_path
+        self.mode = mode
+        self.file_handler = None
+        self.current = None
+
+    def __enter__(self) -> 'OpenFasta':
+        self.file_handler = open(self.file_path, mode=self.mode)
+        return self
+    
+    def __exit__(self, exc_type, exc_val, exc_tb) -> None:
+        if self.file_handler:
+            self.file_handler.close()
+
+    def __iter__(self) -> 'OpenFasta':
+        return self
+
+    def __next__(self) -> FastaRecord:
+        return self.read_record()
+
+    def read_record(self) -> FastaRecord:
+        record_id = ""
+        description = ""
+        sequence = ""
+
+        if self.current:
+            line = self.current
+        else:
+            line = self.file_handler.readline().strip()
+
+        if line == "":
+            raise StopIteration
+
+        if line.startswith(">"):
+            record_id, description = line[1:].split(maxsplit=1)
+
+        while True:
+            line = self.file_handler.readline().strip()
+            if not line or line.startswith(">"):
+                self.current = line
+                break
+            sequence += line
+
+        return FastaRecord(record_id, description, sequence)
+
+    def read_records(self) -> List[FastaRecord]:
+        records = []
+        while True:
+            try:
+                record = self.read_record()
+                records.append(record)
+            except StopIteration:
+                break
+        return records
+    
