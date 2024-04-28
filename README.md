@@ -1,7 +1,7 @@
 # SeqAnalyzer
 
 **SeqAnalyzer** provides a set of Python scripts and utilities for processing and analyzing biological sequences. Whether you're filtering FASTQ files, running sequence predictions, or examining sequence characteristics, SeqAnalyzer offers the functionality you need for your bioinformatics tasks.
-### Main scripts:
+### Main Scripts:
 - **`seqanalyzer.py`**: A module containing utilities for filtering FASTQ sequences and representing biological sequences such as nucleic acids and amino acids.
 - **`bio_files_processor.py`**: A module for processing sequence files, including functions to convert multi-line FASTA files to single-line format and to extract genes from GenBank files.
 - **`custom_random_forest.py`**: A custom implementation of a random forest algorithm with multiprocessing support.
